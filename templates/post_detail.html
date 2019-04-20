@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body %}
+{% load crispy_forms_tags %}
+{% load social_share %}
+    <link rel="stylesheet" type="text/css" href="{% static 'main.css' %}">
+    <article class="media content-section">
+    <img class="img-circle" alt="{{object.profile.image.url }}" width="50px" height="50px" src="{{ object.author.profile.image.url }}" >
+    <div class="media-body">
+    <div class="article-metadata">
+    <strong><a class="mr-2" href="{% url 'post-user' object.author.username %}">{{ object.author }}</a></strong>
+    <small class="text-muted">{{ object.date | date:"F d, y" }}</small>
+    {% if object.author == user %}
+        <a class="btn btn-default btn-sm mt-1 mb-1" href="{% url 'post-update' object.id %}">Edit Post</a>
+        <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'post-delete' object.id %}">Delete Post</a>
+    {% endif %}
+
+    </div>
+    <h2 class="article-title"> {{ object.title }} </h2>
+    <p class="article-content">{{ object.content }}</p>
+    <button class ="btn btn-default btn-sm" type="button" name="button">{% post_to_twitter "New Song: {{object.title}}. Check it out!" object_or_url "Post to Twitter" %}</button>
+    <button class ="btn btn-default btn-sm" type="button" name="button">{% post_to_gplus object_or_url "Post to Google+!" %}</button>
+    <button class ="btn btn-default btn-sm" type="button" name="button">{% send_email object.title "New Song: {{object.title}}. Check it out!" object_or_url "Share Via Email" %}</button>
+    <button class ="btn btn-default btn-sm" type="button" name="button">{% post_to_linkedin object.title object_or_url "Post to LinkedIn" %}</button>
+
+<!--
+<div class="fb-comments" data-href="{{ request.build_absolute_uri }}" </div> -->
+<br>
+<p>Likes: {{ post.likes.count }}  <a href="{{ post.get_like_url }}"  class="glyphicon glyphicon-thumbs-up">Like</a></p>
+<a href="{% url 'add_comments' object.id %}"><h3>Share Your Thought</h3></a>
+<h4>total number of comment is {{ post.comments.count }}</h4>
+{% for comment in post.comments.all %}
+    <strong><p>{{ comment.created }}</p></strong>
+    <strong><a class="mr-2" href="{% url 'post-user' comment.author.username %}">{{ comment.author }}</a></strong>
+    <p>{{ comment.content }}</p>
+    {% empty %}
+    <strong><p>oops!No Comment Yet</p>
+    <a href="{% url 'add_comments' object.id %}"><h3>Leave a comment</h3></a>
+    </strong>
+
+{% endfor %}
+{% endblock %}

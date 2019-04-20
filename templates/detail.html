@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body %}
+{% load crispy_forms_tags %}
+<h1>{{view.kwargs.username}} Profiles</h1>
+
+<p>
+    <a href="{% url 'user-follow' username=object.username %}">Follow</a>
+</p>
+
+<p>Following {{object.profile.following.count}}</p>
+{% for post in object.post_set.all %}
+{{post}}
+
+{% endfor %}
+
+<h1>Following</h1>
+
+{% for user in object.profile.following.all %}
+
+{{ user.username }}<br>
+
+{% empty %}
+    <h1>Not Following Anyone</h1>
+{% endfor %}
+
+<h1>Followed By</h1>
+<!-- {{object.profile.followed_by.count.}} -->
+{% for user in object.profile.followed_by.all %}
+
+{{ user.username }}<br>
+{{object.profile.followed_by}}
+
+{% empty %}
+    <p>Not Following Anyone</p>
+
+{% endfor %}
+
+{% endblock %}

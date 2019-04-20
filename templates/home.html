@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body %}
+
+
+
+    {% for post in my_posts %}
+    <article class="media content-section">
+    <a href="{% url 'post-user' post.author.username %}"><img class="img-circle" width="65px" height="65px" src="{{ post.author.profile.image.url }}" alt=""></a>
+    <div class="media-body">
+    <div class="article-metadata">
+    <strong><a class="mr-2" href="{% url 'user-detail' post.author.username %}">{{ post.author }}</a></strong>
+    <small class="text-muted">{{ post.date | date:"F d, y" }}</small>
+    </div>
+    <h2><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
+    <p class="article-content">{{ post.content }}</p>
+    <!-- <p>Likes: {{ post.likes.count }} <a href="{{ post.get_like_url }}" class="btn btn-info btn-sm">
+          <span class="glyphicon glyphicon-thumbs-up"></span> Like -->
+
+
+    <p>Likes: {{ post.likes.count }}  <a href="{{ post.get_like_url }}"  class="glyphicon glyphicon-thumbs-up">Like</a></p>
+    </div>
+    </article>
+
+    {% endfor %}
+
+    {% if is_paginated %}
+
+        {% if page_obj.has_previous %}
+            <a class="btn btn-primary mb-5" href="?page=1">goto your home page</a>
+            <a class="btn btn-primary mb-5" href="?page={{ page_obj.previous_page_number }}">goto previous page</a>
+        {% endif %}
+        {% if page_obj.has_next %}
+            <a class="btn btn-primary mb-5" href="?page={{ page_obj.next_page_number }}">see older posts</a>
+        {% endif %}
+
+    {% endif %}
+
+
+
+{% endblock %}
